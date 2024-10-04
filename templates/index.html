@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESP Sensor Data</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        body {
+            min-width: 310px;
+            max-width: 1280px;
+            height: 500px;
+            margin: 0 auto;
+        }
+        h2 {
+            font-family: Arial, sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>ESP Sensor Data</h2>
+    <div id="chart-temperature" class="container"></div>
+    <div id="chart-humidity" class="container"></div>
+    <div id="chart-pressure" class="container"></div>
+
+    <script>
+        // Fetch sensor data and render charts
+        function fetchSensorData() {
+            fetch('/api/sensor_data')
+                .then(response => response.json())
+                .then(data => {
+                    const value1 = data.value1;
+                    const value2 = data.value2;
+                    const value3 = data.value3;
+                    const reading_time = data.reading_time;
+
+                    // Render temperature chart
+                    Highcharts.chart('chart-temperature', {
+                        chart: { type: 'line' },
+                        title: { text: 'Temperature' },
+                        xAxis: { categories: reading_time },
+                        yAxis: { title: { text: 'Temperature (Celsius)' } },
+                        series: [{ data: value1 }]
+                    });
+
+                    // Render humidity chart
+                    Highcharts.chart('chart-humidity', {
+                        chart: { type: 'line' },
+                        title: { text: 'Humidity' },
+                        xAxis: { categories: reading_time },
+                        yAxis: { title: { text: 'Humidity (%)' } },
+                        series: [{ data: value2 }]
+                    });
+
+                    // Render pressure chart
+                    Highcharts.chart('chart-pressure', {
+                        chart: { type: 'line' },
+                        title: { text: 'Pressure' },
+                        xAxis: { categories: reading_time },
+                        yAxis: { title: { text: 'Pressure (hPa)' } },
+                        series: [{ data: value3 }]
+                    });
+                });
+        }
+
+        // Refresh sensor data every 5 seconds
+        setInterval(fetchSensorData, 5000);
+        fetchSensorData();  // Initial fetch
+    </script>
+</body>
+</html>
