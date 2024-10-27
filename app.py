@@ -57,7 +57,7 @@ def post_data():
 
 
 # Dashboard route to display sensor data
-@app.route('/dashboard')
+@app.route('/')
 def dashboard():
     conn = sqlite3.connect('sensor_data.db')
     c = conn.cursor()
